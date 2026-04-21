@@ -1,0 +1,14 @@
+{
+  "name": "barbearia-agendamentos-node",
+  "version": "1.0.0",
+  "description": "Sistema simples de agendamento com Node.js e arquivo JSON",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.19.0"
+  }
+}

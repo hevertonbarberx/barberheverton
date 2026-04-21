@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Agendamentos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/png" href="/imgs/logo.png">
+  <style>
+    .admin-hero {
+      min-height: auto;
+      padding: 34px 20px 10px;
+    }
+
+    .admin-hero .hero-content {
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .admin-hero .hero-title {
+      font-size: clamp(2rem, 3vw, 3rem);
+      text-transform: none;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .admin-hero .hero-sub {
+      margin-top: 0;
+      max-width: 820px;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .admin-stat {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+    }
+
+    .admin-stat .label {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 8px;
+    }
+
+    .admin-stat .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .appointments-panel {
+      margin-top: 24px;
+    }
+
+    .appointments-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .appointments-panel-header h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 1.15rem;
+    }
+
+    .appointments-filters {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr .8fr auto;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .appointments-filters input,
+    .appointments-filters select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: #0b0b0b;
+      color: #EAEAEA;
+      outline: none;
+    }
+
+    .appointments-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .booking-item {
+      padding: 16px;
+      border-radius: 14px;
+      background: #0b0b0b;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .booking-item-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .booking-item-top strong {
+      display: block;
+      color: #fff;
+      font-size: 1.02rem;
+    }
+
+    .booking-item-top span {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .booking-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .82rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .badge.heverton {
+      background: rgba(217, 182, 43, 0.14);
+      border-color: rgba(221, 153, 26, 0.28);
+      color: #f9c675;
+    }
+
+    .badge.indiferente {
+      background: rgba(255, 209, 102, 0.12);
+      border-color: rgba(255, 209, 102, 0.22);
+      color: #ffe7a0;
+    }
+
+    .delete-booking-btn {
+      border: none;
+      background: rgba(211, 47, 47, 0.14);
+      color: #ffb5b5;
+      border-radius: 999px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .15s ease, background .15s ease;
+      white-space: nowrap;
+    }
+
+    .delete-booking-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(211, 47, 47, 0.2);
+    }
+
+    .appointments-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 24px 12px;
+    }
+
+    .admin-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .small-btn {
+      background: transparent;
+      color: #f3b80a;
+      border: 1px solid rgba(238, 199, 26, 0.407);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+
+    .small-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #111;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 4000;
+      max-width: 360px;
+      border-left: 4px solid #4caf50;
+    }
+
+    .toast.error {
+      border-left-color: #f44336;
+    }
+
+    .toast.warning {
+      border-left-color: #ffd166;
+    }
+
+    @media (max-width: 1000px) {
+      .admin-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .appointments-filters {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .admin-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .appointments-filters {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-item-top {
+        flex-direction: column;
+      }
+
+      .admin-links {
+        justify-content: flex-start;
+      }
+
+      .admin-hero {
+        padding-top: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/index.html" class="logo-brand">
+        <img src="imgs/logo.png" alt="Logo heverton" class="logo-img" onerror="this.style.display='none'">
+        <span>Barbearia Barber DUO</span>
+      </a>
+
+      <nav>
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/admin">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
+    <section class="hero-section admin-hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Painel Admin — Agendamentos</h1>
+        <p class="hero-sub">
+          Veja os agendamentos!
+        </p>
+        <button class="small-btn" id="logoutBtn" type="button">Sair do admin</button>
+
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="label">Total exibido</div>
+            <div class="value" id="totalVisible">0</div>
+          </div>
+          <div class="admin-stat">
+            <div class="label">Total geral</div>
+            <div class="value" id="totalAll">0</div>
+          </div>
+          <div class="admin-stat">
+            <div class="label">Heverton</div>
+            <div class="value" id="totalHeverton">0</div>
+          </div>
+          <div class="admin-stat">
+            <div class="label">Indiferente</div>
+            <div class="value" id="totalIndiferente">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top: 20px;">
+      <div class="container">
+        <div class="appointments-panel">
+          <div class="appointments-panel-header">
+            <h3>Lista de agendamentos</h3>
+            <div class="admin-links">
+              <button class="small-btn" id="refreshBtn" type="button">Atualizar</button>
+              <button class="small-btn" id="clearFiltersBtn" type="button">Limpar filtros</button>
+            </div>
+          </div>
+
+          <div class="appointments-filters">
+            <input id="searchInput" type="text" placeholder="Buscar por nome, telefone, serviço, observação..." />
+            <input id="dateInput" type="date" />
+            <select id="barberSelect">
+              <option value="">Todos os barbeiros</option>
+              <option value="Heverton">Heverton</option>
+              <option value="Indiferente">Indiferente</option>
+            </select>
+            <button class="btn btn-primary" id="applyFiltersBtn" type="button">Filtrar</button>
+          </div>
+
+          <div class="appointments-list" id="bookingsList">
+            <p class="appointments-empty">Carregando agendamentos...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <div class="footer-container">
+      <div>
+        <strong style="color:#fff;">Barbearia Barber DUO</strong>
+        <div style="font-size:.9rem; color:var(--muted);">Painel administrativo de agendamentos.</div>
+      </div>
+      <div class="social-links">
+        <a href="/index.html">Site</a>
+        <a href="/admin">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const bookingsList = document.getElementById('bookingsList');
+    const searchInput = document.getElementById('searchInput');
+    const dateInput = document.getElementById('dateInput');
+    const barberSelect = document.getElementById('barberSelect');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+
+    const totalVisibleEl = document.getElementById('totalVisible');
+    const totalAllEl = document.getElementById('totalAll');
+    const totalHevertonEl = document.getElementById('totalHeverton');
+    const totalIndiferenteEl = document.getElementById('totalIndiferente');
+
+    const toastEl = document.getElementById('toast');
+    let bookings = [];
+
+    function showToast(message, type = 'success') {
+      toastEl.innerText = message;
+      toastEl.className = 'toast' + (type ? ` ${type}` : '');
+      toastEl.style.display = 'block';
+      setTimeout(() => {
+        toastEl.style.display = 'none';
+      }, 3500);
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function formatDateBR(dateStr) {
+      if (!dateStr) return '-';
+      const [y, m, d] = dateStr.split('-');
+      if (!y || !m || !d) return dateStr;
+      return `${d}/${m}/${y}`;
+    }
+
+    function formatDateTimeBR(isoString) {
+      if (!isoString) return '-';
+      const dt = new Date(isoString);
+      if (Number.isNaN(dt.getTime())) return isoString;
+      return dt.toLocaleString('pt-BR');
+    }
+
+    function getFilteredBookings() {
+      const search = searchInput.value.trim().toLowerCase();
+      const date = dateInput.value;
+      const barber = barberSelect.value.trim().toLowerCase();
+
+      return bookings.filter((item) => {
+        const haystack = [
+          item.client_name,
+          item.client_phone,
+          item.client_email,
+          item.service,
+          item.date,
+          item.time,
+          item.barber,
+          item.notes
+        ].join(' ').toLowerCase();
+
+        if (search && !haystack.includes(search)) return false;
+        if (date && item.date !== date) return false;
+        if (barber && item.barber.toLowerCase() !== barber) return false;
+        return true;
+      });
+    }
+
+    function renderStats(visibleCount) {
+      totalAllEl.textContent = bookings.length;
+      totalVisibleEl.textContent = visibleCount;
+      totalHevertonEl.textContent = bookings.filter(b => (b.barber || '').toLowerCase() === 'heverton').length;
+      totalIndiferenteEl.textContent = bookings.filter(b => (b.barber || '').toLowerCase() === 'indiferente').length;
+    }
+
+    function renderBookings() {
+      const filtered = getFilteredBookings();
+      renderStats(filtered.length);
+
+      if (!filtered.length) {
+        bookingsList.innerHTML = `<p class="appointments-empty">Nenhum agendamento encontrado com esses filtros.</p>`;
+        return;
+      }
+
+      bookingsList.innerHTML = filtered.map((item) => {
+        const barberClass = (item.barber || '').toLowerCase() === 'heverton' ? 'heverton' : 'indiferente';
+
+        return `
+          <article class="booking-item">
+            <div class="booking-item-top">
+              <div>
+                <strong>${escapeHtml(item.client_name || '-')}</strong>
+                <span>ID: ${escapeHtml(item.id || '-')}</span>
+              </div>
+              <button class="delete-booking-btn" type="button" onclick="deleteBooking('${escapeHtml(item.id)}')">
+                Excluir
+              </button>
+            </div>
+
+            <div class="booking-meta">
+              <span><strong>Telefone:</strong> ${escapeHtml(item.client_phone || '-')}</span>
+              <span><strong>E-mail:</strong> ${escapeHtml(item.client_email || '-')}</span>
+              <span><strong>Serviço:</strong> ${escapeHtml(item.service || '-')}</span>
+              <span><strong>Data:</strong> ${formatDateBR(item.date)}</span>
+              <span><strong>Hora:</strong> ${escapeHtml(item.time || '-')}</span>
+              <span><strong>Barbeiro:</strong> <span class="badge ${barberClass}">${escapeHtml(item.barber || 'Indiferente')}</span></span>
+              <span><strong>Criado em:</strong> ${escapeHtml(formatDateTimeBR(item.createdAt))}</span>
+            </div>
+
+            <div class="booking-meta" style="margin-top: 8px;">
+              <span><strong>Observações:</strong> ${escapeHtml(item.notes || '-')}</span>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    async function fetchBookings() {
+      try {
+        bookingsList.innerHTML = `<p class="appointments-empty">Carregando agendamentos...</p>`;
+
+        const response = await fetch('/api/agendamentos', {
+          headers: { 'Accept': 'application/json' }
+        });
+
+        const text = await response.text();
+        let data = [];
+
+        try {
+          data = text ? JSON.parse(text) : [];
+        } catch {
+          throw new Error('Resposta do servidor não veio em JSON. Abra a página em http://localhost:3000/admin.');
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Falha ao carregar agendamentos.');
+        }
+
+        bookings = Array.isArray(data) ? data : [];
+        renderBookings();
+      } catch (error) {
+        bookingsList.innerHTML = `<p class="appointments-empty">Erro ao carregar agendamentos.</p>`;
+        showToast(error.message || 'Erro ao carregar agendamentos.', 'error');
+      }
+    }
+
+    async function deleteBooking(id) {
+      const confirmed = confirm('Tem certeza que deseja excluir este agendamento?');
+      if (!confirmed) return;
+
+      try {
+        const response = await fetch(`/api/agendamentos/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        const text = await response.text();
+        let result = {};
+
+        try {
+          result = text ? JSON.parse(text) : {};
+        } catch {
+          throw new Error('Resposta do servidor não veio em JSON. Abra a página em http://localhost:3000/admin.');
+        }
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Não foi possível excluir o agendamento.');
+        }
+
+        showToast('Agendamento excluído com sucesso.', 'success');
+        await fetchBookings();
+      } catch (error) {
+        showToast(error.message || 'Erro ao excluir.', 'error');
+      }
+    }
+
+    function applyFilters() {
+      renderBookings();
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    dateInput.addEventListener('change', applyFilters);
+    barberSelect.addEventListener('change', applyFilters);
+
+    applyFiltersBtn.addEventListener('click', applyFilters);
+
+    clearFiltersBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      dateInput.value = '';
+      barberSelect.value = '';
+      renderBookings();
+    });
+
+    refreshBtn.addEventListener('click', fetchBookings);
+
+    fetchBookings();
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login';
+    });
+  </script>
+</body>
+
+</html>
