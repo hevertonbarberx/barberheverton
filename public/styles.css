@@ -412,6 +412,7 @@ nav a:hover::after {
 .gallery-grid img:hover {
   transform: scale(1.03);
   filter: brightness(1.05);
+  box-shadow: 0 16px 28px rgba(163, 132, 22, 0.24);
 }
 
 /* Booking */
